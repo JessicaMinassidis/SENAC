@@ -96,5 +96,5 @@ void loop()
   delay(2000);
 
 }
-//Professor, esse crédito está sendo modificado por nós mas não foi criado por nós:
+//Professor, esse código está sendo modificado por nós mas não foi criado por nós:
 //Fonte: https://github.com/mlemos/energy-monitor-cpbr7/blob/master/arduino/energy-monitor-cpbr7.ino
