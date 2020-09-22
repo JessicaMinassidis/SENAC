@@ -1,0 +1,129 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package reconhecimentopadrao;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Jessica
+ */
+public class ReconhecimentoPadrao {
+
+    /**
+     * @param args the command line arguments
+     */
+ 	public static void main(String[] args){
+		int linha; //Armazenha a linha informada no txt
+		int coluna; //Armazenha a coluna informada no txt
+		int linhaMarcada = 0; //Armazena a linha que compÃµe o centro de gravidade
+		int colunaMarcada = 0; //Armazena a coluna que compÃµe o centro de gravidade
+		int indice = 2; //Indice do vetor de doubles, descontados os valores informados para a linha e a coluna
+		double[] matrixValues; //Armazena os valores convertidos de String para double
+		double[] sumRows; //Armazena as somas de cada linha
+		double[] sumColumns; //Armazena as somas de cada coluna
+		double linhaMaior; //Valor arbitrÃ¡rio para a linha que compÃµe o centro de gravidade
+		double colunaMaior; //Valor arbitrÃ¡rio para a coluna que compÃµe o centro de gravidade
+		double[][] dataMatrix; //Armazena os valores em formato matricial
+		String pathArquivo = "C:/Users/Jessica/Documents/";
+                String arquivo = "testeCentroGravidade.txt";
+		String dados = null; //Armazena os valores de todas as linhas lidas
+		String linhaLida; //Armazena cada linha lida
+		String[] valoresString; //Armazena os valores da String dados
+		Scanner leitor = new Scanner(System.in); //Caso queira informar o caminho do arquivo pelo console
+		
+		//Tratamento de exceÃ§Ãµes
+		try{
+			FileReader leitorArquivo = new FileReader(pathArquivo + arquivo); //LÃª um arquivo de texto
+			BufferedReader buffer = new BufferedReader(leitorArquivo); //LÃª um fluxo de caracteres armazenando-os em um buffer
+			
+			linhaLida = buffer.readLine(); //LÃª uma linha
+			dados = linhaLida; //Coloca a linha lida na String dados
+			
+			while(linhaLida != null){ 
+				linhaLida = buffer.readLine(); //LÃª uma linha
+				dados += linhaLida; //Contaena a primeira linha lida com as demais
+			}
+			leitorArquivo.close(); //Fecha o FileReader
+		}catch(IOException ioex){
+			System.out.println("ERRO: " + ioex.getMessage());
+		}
+		
+		//Mostra o tamanho dos dados se houver
+		if(dados != null)
+			System.out.print("\tTamanho da linha: " + dados.length() + "\n");
+		else
+			System.out.println("\tTamanho da linha: " + 0 + "\n");
+		
+		//Separa os valores da String dados com base em espaÃ§os
+		valoresString = dados.split(" ");
+		matrixValues = new double[valoresString.length - 1]; //Determina o tamanho do vetor matrixValues
+		
+		//Converte double e adiciona cada valor de do vetor de Strings valoresString em matrixValues
+		for(int i = 0; i < (matrixValues.length); i++){
+			matrixValues[i] = Double.valueOf(valoresString[i]).doubleValue();
+		}
+			
+		linha = (int) matrixValues[0]; //ObtÃ©m o valor da linha informada no txt
+		coluna = (int) matrixValues[1]; //ObtÃ©m o valor da coluna informada no txt
+		
+		dataMatrix = new double[linha][coluna]; //Define o tamanho da matriz dataMatrix
+		sumRows = new double[linha]; //Define o tamanho da matriz sumRows
+		sumColumns = new double[coluna]; //Define o tamanho da matriz sumColumns
+		
+		System.out.println("\nDados lidos e convertidos para double");
+		for(int i = 0; i < matrixValues.length; i++){
+			System.out.print(matrixValues[i] + "\n");
+		}
+			
+		//Passando os dados do vetor matrixValues para  a matriz dataMatrix
+		for(int i = 0; i < linha; i++){
+			for(int j = 0; j < coluna; j++){
+				dataMatrix[i][j] = matrixValues[indice++];
+			}
+		}
+		
+		System.out.println("\nDados em formato matricial");
+		for(int i = 0; i < linha; i++){
+			for(int j = 0; j < coluna; j++){
+				System.out.print(dataMatrix[i][j] + " ");
+			}
+			System.out.println("");
+		}
+		
+		System.out.println("\nObtendo os somatÃ³rios...");
+		for(int i = 0; i < linha; i++){
+			for(int j = 0; j < coluna; j++){
+				sumRows[i] += dataMatrix[i][j];
+				sumColumns[i] += dataMatrix[j][i];
+			}
+			System.out.println("Linha["+ i +"]-> " + sumRows[i]);
+			System.out.println("Coluna["+ i +"]-> " + sumColumns[i]);
+		}
+		
+		linhaMaior = dataMatrix[0][0];
+		colunaMaior = dataMatrix[0][0];
+		//ObtÃ©m a linha e a coluna de maior peso, bem como o Ã­ndice da linha e da coluna
+		for(int i = 0; i < sumRows.length; i++){
+			if(linhaMaior < sumRows[i]){
+				linhaMaior = sumRows[i];
+				linhaMarcada = i;
+			}
+			
+			if(colunaMaior < sumColumns[i]){
+				colunaMaior = sumColumns[i];
+				colunaMarcada = i;
+			}
+		}
+		
+		System.out.println("\nLinha de maior peso: " + linhaMaior + " -  Coluna de maior peso: " + colunaMaior);
+		System.out.println("\nCentro de gravidade = [" + linhaMarcada + "," + colunaMarcada + "]");
+	}
+}
+	
